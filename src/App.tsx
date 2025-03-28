@@ -1,25 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { ThemeProvider, CssBaseline, Box } from '@mui/material';
+import theme from './theme';
+import NavigationBar from './components/layout/NavigationBar';
+import SingleImageView from './components/views/SingleImageView';
+import MultiImageView from './components/views/MultiImageView';
+import HistoryView from './components/views/HistoryView';
+import SystemInfoView from './components/views/SystemInfoView';
 
-function App() {
+const App: React.FC = () => {
+  const [currentView, setCurrentView] = useState<string>('single');
+  
+  const renderCurrentView = () => {
+    switch (currentView) {
+      case 'single':
+        return <SingleImageView />;
+      case 'multi':
+        return <MultiImageView />;
+      case 'history':
+        return <HistoryView />;
+      case 'system':
+        return <SystemInfoView />;
+      default:
+        return <SingleImageView />;
+    }
+  };
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box sx={{ 
+        display: 'flex',
+        flexDirection: 'column', 
+        height: '100vh',
+        background: 'linear-gradient(to bottom, #f5f5f5, #ffffff)',
+        backgroundAttachment: 'fixed'
+      }}>
+        <NavigationBar currentView={currentView} onViewChange={setCurrentView} />
+        <Box sx={{ flex: 1, overflow: 'auto', p: 2 }}>
+          {renderCurrentView()}
+        </Box>
+      </Box>
+    </ThemeProvider>
   );
 }
 
